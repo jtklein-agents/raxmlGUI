@@ -1,13 +1,45 @@
 import path from 'path';
 
-export async function parseAlignment( _id, filePath, tools ) {
+export interface AlignmentSequence {
+  taxon: string;
+}
+
+export interface Alignment {
+  sequences: AlignmentSequence[];
+}
+
+export interface AlignmentParseTools {
+  readFormat: ( filePath: string ) => Promise<string>;
+  convert: ( filePath: string ) => Promise<string>;
+  parse: ( filePath: string ) => Promise<Alignment>;
+  write: ( filePath: string, alignment: Alignment ) => Promise<void>;
+}
+
+export interface AlignmentChange {
+  newFilePath: string;
+  format: string | undefined;
+  converted: boolean | undefined;
+  modified: boolean | undefined;
+  modificationMessages: string[];
+}
+
+export interface AlignmentParseResult {
+  alignment: Alignment;
+  change: AlignmentChange | null;
+}
+
+export async function parseAlignment(
+  _id: string,
+  filePath: string,
+  tools: AlignmentParseTools,
+): Promise<AlignmentParseResult> {
   console.log( 'Parse alignment', filePath );
   const { readFormat, convert, parse, write } = tools;
-  let format;
-  let newFilePath;
-  let converted;
-  let modified;
-  const modificationMessages = [];
+  let format: string | undefined;
+  let newFilePath: string | undefined;
+  let converted: boolean | undefined;
+  let modified: boolean | undefined;
+  const modificationMessages: string[] = [];
   try {
     format = await readFormat( filePath );
     if ( format !== 'fasta' && format !== 'phylip' ) {
@@ -21,7 +53,7 @@ export async function parseAlignment( _id, filePath, tools ) {
     ? newFilePath
     : filePath;
   const alignment = await parse( actualPath );
-  const taxons = new Map();
+  const taxons = new Map<string, number>();
   let identicalCounter = 0;
   alignment.sequences.forEach( ( sequence, index ) => {
     if ( sequence.taxon.length > 256 ) {

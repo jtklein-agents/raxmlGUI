@@ -2,8 +2,10 @@ import { dialog } from 'electron';
 import fs from 'fs';
 import util from 'util';
 import { activeWindow } from './utils';
+
 const writeFile = util.promisify( fs.writeFile );
-const saveScreenshot = async () => {
+
+const saveScreenshot = async (): Promise<void> => {
   console.log( 'Save screenshot...' );
   const win = activeWindow();
   if ( !win ) {
@@ -37,4 +39,5 @@ const saveScreenshot = async () => {
     console.log( err );
   }
 };
+
 export default saveScreenshot;
