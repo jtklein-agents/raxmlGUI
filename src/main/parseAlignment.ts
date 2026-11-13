@@ -1,21 +1,21 @@
 import path from 'path';
 
-export interface AlignmentSequence {
+interface AlignmentSequence {
   taxon: string;
 }
 
-export interface Alignment {
+interface Alignment {
   sequences: AlignmentSequence[];
 }
 
-export interface AlignmentParseTools {
+interface AlignmentParseTools {
   readFormat: ( filePath: string ) => Promise<string>;
   convert: ( filePath: string ) => Promise<string>;
   parse: ( filePath: string ) => Promise<Alignment>;
   write: ( filePath: string, alignment: Alignment ) => Promise<void>;
 }
 
-export interface AlignmentChange {
+interface AlignmentChange {
   newFilePath: string;
   format: string | undefined;
   converted: boolean | undefined;
@@ -23,7 +23,7 @@ export interface AlignmentChange {
   modificationMessages: string[];
 }
 
-export interface AlignmentParseResult {
+interface AlignmentParseResult {
   alignment: Alignment;
   change: AlignmentChange | null;
 }
@@ -46,7 +46,7 @@ export async function parseAlignment(
       newFilePath = await convert( filePath );
       converted = true;
     }
-  } catch ( error ) {
+  } catch ( error: unknown ) {
     console.log( 'error', error );
   }
   const actualPath = newFilePath

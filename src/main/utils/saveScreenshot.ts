@@ -35,7 +35,7 @@ const saveScreenshot = async (): Promise<void> => {
       console.log( 'Saved!' );
     }
   }
-  catch ( err ) {
+  catch ( err: unknown ) {
     console.log( err );
   }
 };

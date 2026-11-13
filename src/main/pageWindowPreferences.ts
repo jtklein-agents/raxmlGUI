@@ -1,10 +1,10 @@
 import type { WebPreferences } from 'electron';
 
-export interface PageWindowPreferencesOptions {
+interface PageWindowPreferencesOptions {
   preloadPath?: string;
 }
 
-export type PageWindowPreferencesResult = WebPreferences & {
+type PageWindowPreferencesResult = WebPreferences & {
   allowEval: false;
 };
 

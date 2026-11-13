@@ -1,6 +1,6 @@
 import Store from 'electron-store';
 
-export interface AppStoreSchema {
+interface AppStoreSchema {
   darkMode?: boolean;
 }
 

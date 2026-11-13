@@ -1,11 +1,11 @@
-export type RunId = string | number;
+type RunId = string | number;
 
-export interface TrackedProcess {
+interface TrackedProcess {
   cancelled?: boolean;
   kill: () => void;
 }
 
-export type RunResult =
+type RunResult =
   | 'SIGTERM'
   | number
   | NodeJS.Signals

@@ -1,4 +1,4 @@
-export interface DebugInfoInput {
+interface DebugInfoInput {
   name: string;
   version: string;
   electron: string;
