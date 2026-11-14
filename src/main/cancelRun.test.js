@@ -66,7 +66,7 @@ it( 'the model selection handler returns before a terminal event once cancelled'
 
 it( 'the run handler returns before a terminal event once the run is no longer current', () => {
   const handler = fs.readFileSync( path.join( __dirname, 'startRun.js' ), 'utf8' );
-  const helpers = fs.readFileSync( path.join( __dirname, 'processHelpers.js' ), 'utf8' );
+  const helpers = fs.readFileSync( path.join( __dirname, 'processHelpers.ts' ), 'utf8' );
   const finished = handler.lastIndexOf( 'ipc.RUN_FINISHED' );
   const tail = handler.slice( handler.lastIndexOf( 'await ', finished ), finished );
   expect( tail ).toContain( '!stillRunning' );
