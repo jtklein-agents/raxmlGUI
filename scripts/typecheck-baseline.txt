@@ -36,9 +36,9 @@ src/electron.js(5,27): error TS2769: No overload matches this call.
     Argument of type 'typeof CrossProcessExports' is not assignable to parameter of type 'string'.
 src/main/api.js(122,52): error TS2769: No overload matches this call.
 src/main/api.js(143,52): error TS2769: No overload matches this call.
-src/main/astral.js(19,5): error TS2322: Type 'ProcessExit' is not assignable to type 'number'.
+src/main/astral.ts(19,5): error TS2322: Type 'ProcessExit' is not assignable to type 'number'.
   Type 'string' is not assignable to type 'number'.
-src/main/astral.js(21,12): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
+src/main/astral.ts(21,12): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
 src/main/modelSelection.js(60,5): error TS2322: Type 'ProcessExit' is not assignable to type 'number'.
   Type 'string' is not assignable to type 'number'.
 src/main/modelSelection.js(63,40): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
