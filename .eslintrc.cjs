@@ -79,6 +79,12 @@ module.exports = {
             selector: 'CatchClause[param][param.typeAnnotation=undefined]',
             message: 'Annotate catch bindings (use unknown).',
           },
+          {
+            selector:
+              'CatchClause BinaryExpression[operator="instanceof"][right.name="Error"]',
+            message:
+              'Read (error as Error).message; jsdom Error is a different realm from Node throws.',
+          },
         ],
       },
     },
