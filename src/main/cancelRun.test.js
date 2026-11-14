@@ -51,7 +51,7 @@ it( 'a finished run still reports its result', () => {
 } );
 
 it( 'the model selection handler returns before a terminal event once cancelled', () => {
-  const handler = fs.readFileSync( path.join( __dirname, 'modelSelection.js' ), 'utf8' );
+  const handler = fs.readFileSync( path.join( __dirname, 'modelSelection.ts' ), 'utf8' );
   const started = handler.indexOf( 'await runProcess' );
   const success = handler.lastIndexOf( 'ipc.ALIGNMENT_MODEL_SELECTION_SUCCESS' );
   const failure = handler.indexOf( 'ipc.ALIGNMENT_MODEL_SELECTION_FAILURE' );
