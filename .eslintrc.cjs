@@ -70,7 +70,7 @@ module.exports = {
     },
     {
       // Main TypeScript (#67): full typing under non-strict — typed catch, typed exports.
-      files: ['src/main/**/*.{ts,tsx}'],
+      files: ['src/main/**/*.{ts,tsx}', 'src/common/**/*.{ts,tsx}'],
       rules: {
         '@typescript-eslint/explicit-module-boundary-types': 'error',
         'no-restricted-syntax': [
