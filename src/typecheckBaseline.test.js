@@ -23,5 +23,18 @@ it( 'reports a src/ baseline line whose diagnostic is gone', () => {
   ];
   expect( unusedLines( known, ['src/a.js(9,4): error TS1: known'] ) ).toEqual( [
     'src/gone.js(2,1): error TS2: gone',
+    '  Overload 1 of 4, leftover continuation',
   ] );
+} );
+
+it( 'does not let one file\'s continuation shelter another file\'s', () => {
+  const known = [
+    'src/a.js(1,1): error TS1: known',
+    '  Overload 1 of 4, same text',
+  ];
+  const actual = [
+    'src/b.js(2,1): error TS1: known',
+    '  Overload 1 of 4, same text',
+  ];
+  expect( freshLines( actual, known ) ).toEqual( actual );
 } );

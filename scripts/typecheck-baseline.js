@@ -16,16 +16,31 @@ function fingerprint(line) {
   return line.replace(/\(\d+,\d+\): /, ': ');
 }
 
+/** Pathless tsc continuations belong to the preceding src/ header. */
+function ownedFingerprints(lines) {
+  let owner = '';
+  return lines.map((line) => {
+    const match = /^(src\/\S+?)\(/.exec(line);
+    if (match) {
+      owner = match[1];
+      return fingerprint(line);
+    }
+    return owner
+      ? `${owner}|${line}`
+      : line;
+  });
+}
+
 function freshLines(actual, known) {
-  const seen = new Set(known.map(fingerprint));
-  return actual.filter((line) => !seen.has(fingerprint(line)));
+  const seen = new Set(ownedFingerprints(known));
+  const actualOwned = ownedFingerprints(actual);
+  return actual.filter( (line, i) => !seen.has(actualOwned[i]) );
 }
 
 function unusedLines(known, actual) {
-  const seen = new Set(actual.map(fingerprint));
-  return known.filter(
-    (line) => line.startsWith('src/') && !seen.has(fingerprint(line)),
-  );
+  const seen = new Set(ownedFingerprints(actual));
+  const knownOwned = ownedFingerprints(known);
+  return known.filter( (line, i) => !seen.has(knownOwned[i]) );
 }
 
 function main() {
@@ -65,4 +80,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { diagnosticLines, freshLines, unusedLines };
+module.exports = { diagnosticLines, freshLines, unusedLines, ownedFingerprints };
