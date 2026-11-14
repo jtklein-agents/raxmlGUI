@@ -1,11 +1,21 @@
-export const is = {
+interface Is {
+  macos: boolean;
+  linux: boolean;
+  windows: boolean;
+  development: boolean;
+}
+
+export const is: Is = {
   macos: process.platform === 'darwin',
   linux: process.platform === 'linux',
   windows: process.platform === 'win32',
   development: process.env.NODE_ENV === 'development',
 };
-export const platform = ( object ) => {
-  let platformKey = process.platform;
+
+export const platform = <T>(
+  object: { [key: string]: T | ( () => T ) | undefined },
+): T => {
+  let platformKey: string = process.platform;
   if ( is.macos ) {
     platformKey = 'macos';
   } else if ( is.windows ) {
@@ -15,9 +25,10 @@ export const platform = ( object ) => {
     ? object[platformKey]
     : object.default;
   return typeof fn === 'function'
-    ? fn()
-    : fn;
+    ? ( fn as () => T )()
+    : fn as T;
 };
-export const quote = ( dir ) => ( is.windows
+
+export const quote = ( dir: string ): string => ( is.windows
   ? `"${dir}"`
   : dir );
