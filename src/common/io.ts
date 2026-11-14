@@ -5,15 +5,25 @@ import phylipParser from './phylipParser';
 import fastaParser from './fastaParser';
 import typecheckAlignment from './typecheckAlignment';
 import UserFixError from './errors';
-export const parseAlignment = async ( filePath ) => {
+
+interface AlignmentSequence {
+  taxon: string;
+  code: string;
+}
+
+interface Alignment {
+  sequences: AlignmentSequence[];
+}
+
+export const parseAlignment = async ( filePath: string ): Promise<Alignment> => {
   return new Promise( ( resolve, reject ) => {
     const rl = readline.createInterface( {
       input: fs.createReadStream( filePath ),
       terminal: false,
     } );
-    const lines = [];
-    let error = null;
-    let alignment = null;
+    const lines: string[] = [];
+    let error: Error | null = null;
+    let alignment: Alignment | null = null;
     rl.on( 'line', ( line ) => {
       lines.push( line );
     } ).on( 'close', () => {
@@ -25,7 +35,7 @@ export const parseAlignment = async ( filePath ) => {
         } else {
           throw new UserFixError( "Unrecognized input format. RaxmlGUI2 supports the following input types at the moment: 'clustal', 'fasta', 'nbrf', 'nexus', 'mega', 'phylip'." );
         }
-      } catch ( err ) {
+      } catch ( err: unknown ) {
         const parseError = err instanceof Error
           ? err
           : new Error( String( err ) );
@@ -40,7 +50,7 @@ export const parseAlignment = async ( filePath ) => {
         }
         try {
           typecheckAlignment( alignment );
-        } catch ( err ) {
+        } catch ( err: unknown ) {
           console.error( 'Error checking data type:', err );
           return reject( err );
         }
@@ -53,7 +63,8 @@ export const parseAlignment = async ( filePath ) => {
     } );
   } );
 };
-export const writeAlignment = async ( filePath, alignment ) => {
+
+export const writeAlignment = async ( filePath: string, alignment: Alignment ): Promise<void> => {
   console.log( `Write alignment in FASTA format to ${filePath}` );
   console.log( alignment );
   const writeStream = fs.createWriteStream( filePath );
@@ -70,7 +81,12 @@ export const writeAlignment = async ( filePath, alignment ) => {
   await end.call( writeStream );
 };
 
-const io = {
+interface Io {
+  parseAlignment: ( filePath: string ) => Promise<Alignment>;
+  writeAlignment: ( filePath: string, alignment: Alignment ) => Promise<void>;
+}
+
+const io: Io = {
   parseAlignment,
   writeAlignment,
 };
