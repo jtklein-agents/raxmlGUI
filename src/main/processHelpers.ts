@@ -16,7 +16,8 @@ import {
 
 declare const __static: string;
 
-type RunId = string | number;
+/** Run number, or alignment composite `${run.id}_${path}`. */
+type TrackedId = string | number;
 
 type ProcessExit =
   | 'SIGTERM'
@@ -78,7 +79,7 @@ export function spawnProcess(
 }
 
 export async function runProcess(
-  id: RunId,
+  id: TrackedId,
   event: IpcMainEvent,
   binaryDir: string,
   binaryName: string,

@@ -8,7 +8,7 @@ import {
   send,
 } from './processHelpers';
 
-type RunId = string | number;
+type RunId = number;
 
 type ProcessExit =
   | 'SIGTERM'

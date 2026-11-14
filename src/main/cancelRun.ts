@@ -1,4 +1,5 @@
-type RunId = string | number;
+/** Run number, or alignment composite `${run.id}_${path}`. */
+type TrackedId = string | number;
 
 interface TrackedProcess {
   cancelled?: boolean;
@@ -15,22 +16,22 @@ type RunResult =
 const processes: Record<string, TrackedProcess> = Object.create( null ) as Record<string, TrackedProcess>;
 const generation: Record<string, number> = Object.create( null ) as Record<string, number>;
 
-export function beginRun( id: RunId ): number {
+export function beginRun( id: TrackedId ): number {
   const key = String( id );
   const next = ( generation[key] || 0 ) + 1;
   generation[key] = next;
   return next;
 }
 
-export function stillRunning( id: RunId, token: number ): boolean {
+export function stillRunning( id: TrackedId, token: number ): boolean {
   return generation[String( id )] === token;
 }
 
-export function trackRun( id: RunId, proc: TrackedProcess ): void {
+export function trackRun( id: TrackedId, proc: TrackedProcess ): void {
   processes[String( id )] = proc;
 }
 
-export function stopRun( id: RunId ): void {
+export function stopRun( id: TrackedId ): void {
   const proc = processes[String( id )];
   if ( !proc ) {
     return;
@@ -41,13 +42,13 @@ export function stopRun( id: RunId ): void {
   console.log( `Killed RAxML process ${id}` );
 }
 
-export function cancelRun( id: RunId ): void {
+export function cancelRun( id: TrackedId ): void {
   const key = String( id );
   generation[key] = ( generation[key] || 0 ) + 1;
   stopRun( id );
 }
 
-export function forgetRun( id: RunId, proc: TrackedProcess ): void {
+export function forgetRun( id: TrackedId, proc: TrackedProcess ): void {
   const key = String( id );
   if ( processes[key] === proc ) {
     delete processes[key];

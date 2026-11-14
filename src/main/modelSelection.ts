@@ -16,8 +16,6 @@ import {
 
 const fs = _fs.promises;
 
-type RunId = string | number;
-
 type ProcessExit =
   | 'SIGTERM'
   | number
@@ -25,7 +23,7 @@ type ProcessExit =
   | null;
 
 interface ModelSelectionPayload {
-  id: RunId;
+  id: string;
   filePath: string;
   outputDir: string;
   dataType: string;
