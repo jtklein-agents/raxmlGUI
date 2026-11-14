@@ -51,10 +51,7 @@ it( 'a finished run still reports its result', () => {
 } );
 
 it( 'the model selection handler returns before a terminal event once cancelled', () => {
-  const source = fs.readFileSync( path.join( __dirname, 'api.js' ), 'utf8' );
-  const start = source.indexOf( 'ipcMain.handle( ipc.ALIGNMENT_MODEL_SELECTION_REQUEST' );
-  const end = source.indexOf( 'ipcMain.handle( ipc.ALIGNMENT_MODEL_SELECTION_CANCEL' );
-  const handler = source.slice( start, end );
+  const handler = fs.readFileSync( path.join( __dirname, 'modelSelection.js' ), 'utf8' );
   const started = handler.indexOf( 'await runProcess' );
   const success = handler.lastIndexOf( 'ipc.ALIGNMENT_MODEL_SELECTION_SUCCESS' );
   const failure = handler.indexOf( 'ipc.ALIGNMENT_MODEL_SELECTION_FAILURE' );
@@ -68,16 +65,14 @@ it( 'the model selection handler returns before a terminal event once cancelled'
 } );
 
 it( 'the run handler returns before a terminal event once the run is no longer current', () => {
-  const source = fs.readFileSync( path.join( __dirname, 'api.js' ), 'utf8' );
-  const start = source.indexOf( 'ipcMain.handle( ipc.RUN_START' );
-  const end = source.indexOf( 'ipcMain.handle( ipc.RUN_CANCEL' );
-  const handler = source.slice( start, end );
+  const handler = fs.readFileSync( path.join( __dirname, 'startRun.js' ), 'utf8' );
+  const helpers = fs.readFileSync( path.join( __dirname, 'processHelpers.js' ), 'utf8' );
   const finished = handler.lastIndexOf( 'ipc.RUN_FINISHED' );
   const tail = handler.slice( handler.lastIndexOf( 'await ', finished ), finished );
   expect( tail ).toContain( '!stillRunning' );
   expect( handler ).toContain( 'reportError( error )' );
   expect( handler ).toContain( 'reportError( err )' );
-  expect( source ).toContain( 'forgetRun( id, proc )' );
+  expect( helpers ).toContain( 'forgetRun( id, proc )' );
 } );
 
 it( 'a failed run still reports the exit error', () => {

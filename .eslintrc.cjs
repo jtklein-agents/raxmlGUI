@@ -68,5 +68,19 @@ module.exports = {
         ],
       },
     },
+    {
+      // Main TypeScript (#67): full typing under non-strict — typed catch, typed exports.
+      files: ['src/main/**/*.{ts,tsx}'],
+      rules: {
+        '@typescript-eslint/explicit-module-boundary-types': 'error',
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: 'CatchClause[param][param.typeAnnotation=undefined]',
+            message: 'Annotate catch bindings (use unknown).',
+          },
+        ],
+      },
+    },
   ],
 };
