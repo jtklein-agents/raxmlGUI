@@ -2,6 +2,8 @@ import path from 'path';
 import util from 'util';
 import _fs from 'fs';
 import childProcess from 'child_process';
+import type { ExecOptions } from 'child_process';
+import type { IpcMainEvent } from 'electron';
 import * as Sentry from '@sentry/electron/main';
 import * as ipc from '../constants/ipc';
 import { is } from '../common/utils';
@@ -23,7 +25,28 @@ const fs = _fs.promises;
 const exec = util.promisify( childProcess.exec );
 const execFile = util.promisify( childProcess.execFile );
 
-async function combineOutput( outputDir, outputFilename ) {
+type RunId = string | number;
+
+type ProcessExit =
+  | 'SIGTERM'
+  | number
+  | NodeJS.Signals
+  | null;
+
+interface StartRunPayload {
+  id: RunId;
+  args: string[][];
+  binaryName: string;
+  outputDir: string;
+  outputFilename: string;
+  outputName: string;
+  combinedOutput: boolean;
+  usesRaxmlNg: boolean;
+  usesModeltestNg: boolean;
+  inputPath: string;
+}
+
+async function combineOutput( outputDir: string, outputFilename: string ): Promise<void> {
   // Use type command on windows, cat on Mac or Linux
   const command = is.windows
     ? 'type'
@@ -34,14 +57,14 @@ async function combineOutput( outputDir, outputFilename ) {
     ...( is.windows
       ? { shell: true }
       : {} ),
-  } );
+  } as unknown as ExecOptions );
   console.log( stdout, stderr );
 }
 
-export async function startRun( event, { id, args, binaryName, outputDir, outputFilename, outputName, combinedOutput, usesRaxmlNg, usesModeltestNg, inputPath } ) {
+export async function startRun( event: IpcMainEvent, { id, args, binaryName, outputDir, outputFilename, outputName, combinedOutput, usesRaxmlNg, usesModeltestNg, inputPath }: StartRunPayload ): Promise<void> {
   const token = beginRun( id );
   stopRun( id );
-  const reportError = ( error ) => {
+  const reportError = ( error: unknown ): void => {
     if ( !stillRunning( id, token ) ) {
       return;
     }
@@ -54,8 +77,8 @@ export async function startRun( event, { id, args, binaryName, outputDir, output
     await fs.access( inputPath );
     // The check succeeded
   }
-  catch ( err ) {
-    const error = new UserFixError( `The input file does not exist '${inputPath}': ${err.message}` );
+  catch ( err: unknown ) {
+    const error = new UserFixError( `The input file does not exist '${inputPath}': ${( err as Error ).message}` );
     Sentry.captureException( err );
     reportError( error );
     return;
@@ -66,9 +89,9 @@ export async function startRun( event, { id, args, binaryName, outputDir, output
     await fs.writeFile( resultFilePath, 'test' );
     console.log( ` -> writing to output file ok!` );
   }
-  catch ( err ) {
+  catch ( err: unknown ) {
     console.error( 'Error writing to output file:', err );
-    const error = new Error( `Error trying to write to output file '${resultFilePath}': ${err.message}` );
+    const error = new Error( `Error trying to write to output file '${resultFilePath}': ${( err as Error ).message}` );
     Sentry.captureException( err );
     reportError( error );
     return;
@@ -77,8 +100,8 @@ export async function startRun( event, { id, args, binaryName, outputDir, output
     try {
       fs.unlink( resultFilePath );
     }
-    catch ( err ) {
-      console.error( `Error trying to unlink temporary result file: ${err.message}` );
+    catch ( err: unknown ) {
+      console.error( `Error trying to unlink temporary result file: ${( err as Error ).message}` );
     }
   }
   console.log( `Try executing binary by running '"${binaryPath}" -v'...` );
@@ -94,9 +117,9 @@ export async function startRun( event, { id, args, binaryName, outputDir, output
       console.error( 'Error:', stderr );
     }
   }
-  catch ( err ) {
+  catch ( err: unknown ) {
     console.error( 'Error executing binary:', err );
-    const error = new Error( `Error trying to execute raxml binary '${binaryPath}': ${err.message}` );
+    const error = new Error( `Error trying to execute raxml binary '${binaryPath}': ${( err as Error ).message}` );
     Sentry.captureException( err );
     reportError( error );
     return;
@@ -112,10 +135,10 @@ export async function startRun( event, { id, args, binaryName, outputDir, output
           ...( is.windows
             ? { shell: true }
             : {} ),
-        } );
+        } as unknown as ExecOptions );
         console.log( stdout, stderr );
       }
-      catch ( err ) {
+      catch ( err: unknown ) {
         console.error( 'Flag check run error:', err );
         Sentry.captureException( err );
         reportError( err );
@@ -123,7 +146,7 @@ export async function startRun( event, { id, args, binaryName, outputDir, output
       }
     }
   }
-  let exitCode = 0;
+  let exitCode: ProcessExit = 0;
   for ( const arg of args ) {
     try {
       console.log( `Run '${binaryName}' with args:`, arg );
@@ -132,7 +155,7 @@ export async function startRun( event, { id, args, binaryName, outputDir, output
         break;
       }
     }
-    catch ( err ) {
+    catch ( err: unknown ) {
       console.error( 'Run error:', err );
       Sentry.captureException( err );
       reportError( err );
