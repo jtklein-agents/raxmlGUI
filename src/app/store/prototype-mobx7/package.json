@@ -1,0 +1,7 @@
+{
+  "name": "prototype-mobx7-option-pattern",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node run.mjs" },
+  "dependencies": { "mobx": "7.1.7", "yup": "^1.4.0" }
+}

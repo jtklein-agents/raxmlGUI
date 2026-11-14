@@ -1,0 +1,45 @@
+mobx 7.1.7, node v22.18.0
+
+=== Variant A: prototype methods + override ===
+  OutGroup constructed               {"value":["<none>"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"","notAvailable":false}
+  setValue(['<none>','Homo'])        {"value":["Homo"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"Homo","notAvailable":false}
+  setValue(['Homo','Pan'])           {"value":["Homo","Pan"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"Homo,Pan","notAvailable":false}
+  setValue(['Homo','Pan','<none>'])  {"value":["<none>"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"","notAvailable":false}
+  setValue(['Pan'])                  {"value":["Pan"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"Pan","notAvailable":false}
+  reset()                            {"value":["<none>"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"","notAvailable":false}
+  run.haveAlignments = false         {"value":["<none>"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"","notAvailable":true}
+  reactions to cmdValue: ["","Homo","Homo,Pan","","Pan",""]
+  value observable: true, cmdValue computed: true, setValue action: true, reset action: true
+  MultistateNumber.error over '' -> '4' -> 'x': [true,false,true] (child getter, computed: true), haveError: true
+  Analysis (no makeObservable of its own): value=ML observable=true
+  warnings: none
+
+=== Variant B: arrow actions + nextValue hook ===
+  OutGroup constructed               {"value":["<none>"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"","notAvailable":false}
+  setValue(['<none>','Homo'])        {"value":["Homo"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"Homo","notAvailable":false}
+  setValue(['Homo','Pan'])           {"value":["Homo","Pan"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"Homo,Pan","notAvailable":false}
+  setValue(['Homo','Pan','<none>'])  {"value":["<none>"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"","notAvailable":false}
+  setValue(['Pan'])                  {"value":["Pan"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"Pan","notAvailable":false}
+  reset()                            {"value":["<none>"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"","notAvailable":false}
+  run.haveAlignments = false         {"value":["<none>"],"isDefault":false,"error":null,"haveError":false,"cmdValue":"","notAvailable":true}
+  reactions to cmdValue: ["","Homo","Homo,Pan","","Pan",""]
+  value observable: true, cmdValue computed: true, setValue action: true, reset action: true
+  MultistateNumber.error over '' -> '4' -> 'x': [true,false,true] (child getter, computed: true), haveError: true
+  warnings: none
+
+=== Alignment.dispose (annotated arrow over a plain arrow) ===
+  works: cancelled=true eventStops=0 isAction=true
+
+=== Shapes that fail ===
+  literal conversion: `value = this.defaultValue` as a field initializer
+      -> value starts as undefined, defaultValue is "GTR"
+  makeAutoObservable in a class that has a subclass
+      -> THROWS: [MobX] 'makeAutoObservable' can only be used for classes that don't have a superclass
+  makeAutoObservable in a subclass
+      -> THROWS: [MobX] 'makeAutoObservable' can only be used for classes that don't have a superclass
+  subclass redeclares the parent arrow action (OutGroup.setValue today)
+      -> THROWS: Cannot redefine property: setValue
+  subclass re-annotates a parent computed as `computed`, not `override`
+      -> THROWS: [MobX] Cannot apply 'computed' to 'MultistateNumber@17.error':
+  subclass overrides a parent computed and annotates nothing
+      -> no throw; error is true (the parent's getter was annotated, the child's runs?)
