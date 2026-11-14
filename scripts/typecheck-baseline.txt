@@ -31,14 +31,12 @@ src/app/store/Run.js(630,5): error TS2554: Expected 5-6 arguments, but got 4.
 src/app/store/Run.js(662,5): error TS2554: Expected 5-6 arguments, but got 4.
 src/app/store/Run.js(681,5): error TS2554: Expected 5-6 arguments, but got 3.
 src/app/store/Run.js(693,5): error TS2554: Expected 5-6 arguments, but got 4.
-src/app/store/StoreBase.js(19,13): error TS2365: Operator '>' cannot be applied to types 'boolean' and 'number'.
 src/common/utils.js(10,5): error TS2322: Type '"macos"' is not assignable to type 'Platform'.
 src/common/utils.js(12,5): error TS2322: Type '"windows"' is not assignable to type 'Platform'.
 src/electron.js(5,27): error TS2769: No overload matches this call.
   The last overload gave the following error.
     Argument of type 'typeof CrossProcessExports' is not assignable to parameter of type 'string'.
 src/main/api.js(33,10): error TS2304: Cannot find name '__static'.
-src/main/api.js(87,6): error TS2339: Property 'getCurrentWindow' does not exist on type 'typeof BrowserWindow'.
 src/main/api.js(122,52): error TS2769: No overload matches this call.
   Overload 1 of 4, '(command: string, options: ExecOptionsWithBufferEncoding): PromiseWithChild<{ stdout: NonSharedBuffer; stderr: NonSharedBuffer; }>', gave the following error.
     Argument of type '{ shell?: boolean; cwd: any; }' is not assignable to parameter of type 'ExecOptionsWithBufferEncoding'.

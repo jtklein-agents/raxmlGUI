@@ -21,6 +21,11 @@ function freshLines(actual, known) {
   return actual.filter((line) => !seen.has(fingerprint(line)));
 }
 
+function orphanLines(actual, known) {
+  const seen = new Set(actual.map(fingerprint));
+  return known.filter((line) => !seen.has(fingerprint(line)));
+}
+
 function main() {
   if (!fs.existsSync(baselinePath)) {
     console.error('typecheck baseline is missing: ' + baselinePath);
@@ -40,12 +45,16 @@ function main() {
     console.error(result.error || result.stderr || result.stdout);
     process.exit(result.status || 1);
   }
-  const fresh = freshLines(
-    diagnosticLines(`${result.stdout || ''}\n${result.stderr || ''}`),
-    baseline,
-  );
-  if (fresh.length) {
-    console.error(fresh.join('\n'));
+  const actual = diagnosticLines(`${result.stdout || ''}\n${result.stderr || ''}`);
+  const fresh = freshLines(actual, baseline);
+  const orphans = orphanLines(actual, baseline);
+  if (fresh.length || orphans.length) {
+    if (fresh.length) {
+      console.error(fresh.join('\n'));
+    }
+    if (orphans.length) {
+      console.error('orphan baseline lines:\n' + orphans.join('\n'));
+    }
     process.exit(1);
   }
 }
@@ -54,4 +63,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { diagnosticLines, freshLines };
+module.exports = { diagnosticLines, freshLines, orphanLines };
