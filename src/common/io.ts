@@ -36,9 +36,7 @@ export const parseAlignment = async ( filePath: string ): Promise<Alignment> => 
           throw new UserFixError( "Unrecognized input format. RaxmlGUI2 supports the following input types at the moment: 'clustal', 'fasta', 'nbrf', 'nexus', 'mega', 'phylip'." );
         }
       } catch ( err: unknown ) {
-        const parseError = err instanceof Error
-          ? err
-          : new Error( String( err ) );
+        const parseError = err as Error;
         parseError.message = `Error parsing file ${filePath}: ${parseError.message}.`;
         error = parseError;
       }
