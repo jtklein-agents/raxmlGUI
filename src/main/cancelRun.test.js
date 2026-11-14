@@ -16,9 +16,9 @@ import {
 
 it( 'cancelRun stops that run and sends no terminal event', async () => {
   const proc = spawn( process.execPath, ['-e', 'setTimeout(() => {}, 30000)'] );
-  trackRun( 'run-7', proc );
+  trackRun( 7, proc );
   try {
-    cancelRun( 'run-7' );
+    cancelRun( 7 );
     await once( proc, 'exit' );
     const exitCode = runResult( proc, 'exit', 1, null );
     expect( exitCode ).toBe( 'SIGTERM' );
@@ -33,15 +33,15 @@ it( 'cancelRun stops that run and sends no terminal event', async () => {
 it( 'a late exit from a cancelled run leaves the next run tracked', () => {
   const oldProc = { kill() { this.killed = true; } };
   const nextProc = { kill() { this.killed = true; } };
-  const token = beginRun( 'run-8' );
-  trackRun( 'run-8', oldProc );
-  cancelRun( 'run-8' );
-  expect( stillRunning( 'run-8', token ) ).toBe( false );
-  const next = beginRun( 'run-8' );
-  trackRun( 'run-8', nextProc );
-  forgetRun( 'run-8', oldProc );
-  expect( stillRunning( 'run-8', next ) ).toBe( true );
-  cancelRun( 'run-8' );
+  const token = beginRun( 8 );
+  trackRun( 8, oldProc );
+  cancelRun( 8 );
+  expect( stillRunning( 8, token ) ).toBe( false );
+  const next = beginRun( 8 );
+  trackRun( 8, nextProc );
+  forgetRun( 8, oldProc );
+  expect( stillRunning( 8, next ) ).toBe( true );
+  cancelRun( 8 );
   expect( nextProc.killed ).toBe( true );
 } );
 

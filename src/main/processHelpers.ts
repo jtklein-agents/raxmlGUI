@@ -16,7 +16,7 @@ import {
 
 declare const __static: string;
 
-type RunId = string | number;
+type RunId = number;
 
 type ProcessExit =
   | 'SIGTERM'

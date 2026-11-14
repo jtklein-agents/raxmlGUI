@@ -25,7 +25,7 @@ const fs = _fs.promises;
 const exec = util.promisify( childProcess.exec );
 const execFile = util.promisify( childProcess.execFile );
 
-type RunId = string | number;
+type RunId = number;
 
 type ProcessExit =
   | 'SIGTERM'

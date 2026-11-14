@@ -1,4 +1,4 @@
-type RunId = string | number;
+type RunId = number;
 
 interface TrackedProcess {
   cancelled?: boolean;
