@@ -39,9 +39,6 @@ src/main/api.js(143,52): error TS2769: No overload matches this call.
 src/main/astral.js(19,5): error TS2322: Type 'ProcessExit' is not assignable to type 'number'.
   Type 'string' is not assignable to type 'number'.
 src/main/astral.js(21,12): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
-src/main/modelSelection.js(60,5): error TS2322: Type 'ProcessExit' is not assignable to type 'number'.
-  Type 'string' is not assignable to type 'number'.
-src/main/modelSelection.js(63,40): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
 src/main/startRun.js(32,52): error TS2769: No overload matches this call.
   Overload 1 of 4, '(command: string, options: ExecOptionsWithBufferEncoding): PromiseWithChild<{ stdout: NonSharedBuffer; stderr: NonSharedBuffer; }>', gave the following error.
     Argument of type '{ shell?: boolean; cwd: any; }' is not assignable to parameter of type 'ExecOptionsWithBufferEncoding'.

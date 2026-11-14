@@ -1,6 +1,7 @@
 import path from 'path';
 import _fs from 'fs';
 import parsePath from 'parse-filepath';
+import type { IpcMainEvent } from 'electron';
 import * as ipc from '../constants/ipc';
 import { quote } from '../common/utils';
 import {
@@ -15,10 +16,30 @@ import {
 
 const fs = _fs.promises;
 
-export async function runModelSelection( event, payload ) {
+type RunId = string | number;
+
+type ProcessExit =
+  | 'SIGTERM'
+  | number
+  | NodeJS.Signals
+  | null;
+
+interface ModelSelectionPayload {
+  id: RunId;
+  filePath: string;
+  outputDir: string;
+  dataType: string;
+  numThreads: number;
+  binaryName: string;
+}
+
+export async function runModelSelection(
+  event: IpcMainEvent,
+  payload: ModelSelectionPayload,
+): Promise<void> {
   const { id, filePath, outputDir, dataType, numThreads, binaryName } = payload;
   const token = beginRun( id );
-  const reportFailure = ( error ) => {
+  const reportFailure = ( error: unknown ): void => {
     if ( !stillRunning( id, token ) ) {
       return;
     }
@@ -30,7 +51,7 @@ export async function runModelSelection( event, payload ) {
     // Remove binary checkpoint as that may be invalid
     await fs.unlink( `${outputPath}.ckp` );
   }
-  catch ( err ) { }
+  catch ( _err: unknown ) { }
   const args = [];
   if ( dataType === 'nucleotide' ) {
     args.push( '-d', 'nt' );
@@ -47,11 +68,11 @@ export async function runModelSelection( event, payload ) {
   // Number of processors
   args.push( '-p', numThreads );
   console.log( `Alignment '${id}': Run modeltest with args ${args}...` );
-  const stdOuts = [];
-  const onStdOut = ( content ) => {
+  const stdOuts: string[] = [];
+  const onStdOut = ( content: string ): void => {
     stdOuts.push( content );
   };
-  let exitCode = 0;
+  let exitCode: ProcessExit = 0;
   try {
     if ( !stillRunning( id, token ) ) {
       return;
@@ -67,7 +88,7 @@ export async function runModelSelection( event, payload ) {
       throw new Error( `Error trying to run modeltest-ng, exited with code '${exitCode}'.` );
     }
   }
-  catch ( err ) {
+  catch ( err: unknown ) {
     console.error( 'Modeltest run error:', err );
     reportFailure( err );
     return;
@@ -92,7 +113,7 @@ export async function runModelSelection( event, payload ) {
       },
     } );
   }
-  catch ( err ) {
+  catch ( err: unknown ) {
     console.error( `Couldn't parse best models from modeltest-ng output:`, err );
     console.log( 'output:', commands );
     const error = new Error( `Couldn't parse best models from modeltest-ng output. Check alignment log.` );
