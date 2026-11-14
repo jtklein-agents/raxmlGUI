@@ -36,9 +36,11 @@ src/electron.js(5,27): error TS2769: No overload matches this call.
     Argument of type 'typeof CrossProcessExports' is not assignable to parameter of type 'string'.
 src/main/api.js(122,52): error TS2769: No overload matches this call.
 src/main/api.js(143,52): error TS2769: No overload matches this call.
+src/main/astral.js(19,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
 src/main/astral.js(21,12): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
+src/main/modelSelection.js(60,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
 src/main/modelSelection.js(63,40): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
-src/main/processHelpers.js(20,10): error TS2304: Cannot find name '__static'.
+src/main/processHelpers.ts(20,10): error TS2304: Cannot find name '__static'.
 src/main/startRun.js(32,52): error TS2769: No overload matches this call.
   Overload 1 of 4, '(command: string, options: ExecOptionsWithBufferEncoding): PromiseWithChild<{ stdout: NonSharedBuffer; stderr: NonSharedBuffer; }>', gave the following error.
     Argument of type '{ shell?: boolean; cwd: any; }' is not assignable to parameter of type 'ExecOptionsWithBufferEncoding'.
@@ -63,3 +65,4 @@ src/main/startRun.js(111,99): error TS2769: No overload matches this call.
     Argument of type '{ shell?: boolean; }' is not assignable to parameter of type 'ExecOptions'.
       Types of property 'shell' are incompatible.
         Type 'boolean' is not assignable to type 'string'.
+src/main/startRun.js(130,7): error TS2322: Type 'unknown' is not assignable to type 'number'.
