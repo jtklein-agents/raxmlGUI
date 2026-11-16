@@ -1,23 +1,32 @@
 import { observable, computed, action, makeObservable } from 'mobx';
 import { mixed } from 'yup';
+import type { Schema, ValidationError } from 'yup';
+import type Run from './Run';
 
-class Option {
-  /**
-   * Reactive option with optional validation
-   * @param {Object} run
-   * @param {*} defaultValue
-   * @param {String} title
-   * @param {String} description
-   * @param {String} hoverInfo
-   * @param {yup|undefined} schema
-   */
+export interface OptionSettings {
+  schema?: Schema;
+  allowOnlyValidChange?: boolean;
+  helperText?: string;
+}
+
+class Option<Value = unknown> {
+  run: Run;
+  defaultValue: Value;
+  title: string;
+  description: string | undefined;
+  hoverInfo: string | undefined;
+  schema: Schema;
+  allowOnlyValidChange: boolean;
+  helperText: string;
+
+  /** Reactive option with optional validation */
   constructor(
-    run,
-    defaultValue,
-    title,
-    description,
-    hoverInfo,
-    { schema = undefined, allowOnlyValidChange = false, helperText = '' } = {},
+    run: Run,
+    defaultValue: Value,
+    title: string,
+    description?: string,
+    hoverInfo?: string,
+    { schema = undefined, allowOnlyValidChange = false, helperText = '' }: OptionSettings = {},
   ) {
     makeObservable( this, {
       value: observable,
@@ -40,35 +49,35 @@ class Option {
     this.helperText = helperText;
     this.value = defaultValue;
   }
-  value;
-  setValue( value ) {
+  value: Value;
+  setValue( value: Value ): void {
     const isValid = this.schema.isValidSync( value );
     if ( !this.allowOnlyValidChange || isValid ) {
       this.value = isValid
-        ? this.schema.cast( value )
+        ? this.schema.cast( value ) as Value
         : value;
     }
   }
-  reset() {
+  reset(): void {
     this.value = this.defaultValue;
   }
-  get isDefault() {
+  get isDefault(): boolean {
     return this.value === this.defaultValue;
   }
-  get error() {
+  get error(): ValidationError | boolean | null {
     try {
       this.schema.validateSync( this.value );
       return null;
     } catch ( err ) {
-      return err;
+      return err as ValidationError;
     }
   }
-  get haveError() {
+  get haveError(): boolean {
     return this.error !== null;
   }
-  get errorMessage() {
+  get errorMessage(): string {
     return this.haveError
-      ? this.error.message
+      ? ( this.error as ValidationError ).message
       : '';
   }
 }
