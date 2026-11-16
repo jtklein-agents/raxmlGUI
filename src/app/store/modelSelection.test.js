@@ -1,4 +1,5 @@
 // @ts-nocheck — test doubles and window.rendererBridge are untyped.
+import { runInAction } from 'mobx';
 import Run from './Run';
 import { runEvents } from './StoreBase';
 
@@ -34,8 +35,10 @@ it( 'startModelSelection starts model selection', async () => {
   run.setOutputDir( '/out' );
   run.addAlignments( [{ path: '/data/primates.fasta' }] );
   const alignment = run.alignments[0];
-  alignment.numSequences = 4;
-  alignment.dataType = 'nucleotide';
+  runInAction( () => {
+    alignment.numSequences = 4;
+    alignment.dataType = 'nucleotide';
+  } );
 
   await alignment.runModelTest();
 
