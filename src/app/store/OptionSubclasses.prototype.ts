@@ -2,18 +2,28 @@
 // OutGroup from RunOptions.js and MultistateNumber from AlignmentOptions.js.
 import { computed, makeObservable, override } from 'mobx';
 import Option from './Option';
-import type Run from './Run';
-import type Alignment from './Alignment';
 
 interface Choice<Value> {
   value: Value;
   title: string;
 }
 
-export class OutGroup extends Option<string[]> {
+// Only what this leaf reads from its owner.
+interface OptionRun {
+  taxons: string[];
+  haveAlignments: boolean;
+  analysisOption: { params: string[] };
+}
+
+interface OptionAlignment {
+  run: { usesRaxmlNg: boolean };
+  dataType: string;
+}
+
+export class OutGroup extends Option<string[], OptionRun> {
   multiple: boolean;
 
-  constructor( run: Run ) {
+  constructor( run: OptionRun ) {
     super( run, ['<none>'], 'Outgroup', '' );
     makeObservable( this, {
       options: computed,
@@ -55,11 +65,11 @@ export class OutGroup extends Option<string[]> {
   }
 }
 
-export class MultistateNumber extends Option<string> {
-  alignment: Alignment;
+export class MultistateNumber extends Option<string, OptionAlignment['run']> {
+  alignment: OptionAlignment;
   placeholder: string;
 
-  constructor( alignment: Alignment ) {
+  constructor( alignment: OptionAlignment ) {
     super( alignment.run, '', 'Number of states' );
     makeObservable( this, {
       notAvailable: computed,

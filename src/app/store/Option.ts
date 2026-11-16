@@ -1,7 +1,6 @@
 import { observable, computed, action, makeObservable } from 'mobx';
 import { mixed } from 'yup';
 import type { Schema, ValidationError } from 'yup';
-import type Run from './Run';
 
 export interface OptionSettings {
   schema?: Schema;
@@ -9,8 +8,8 @@ export interface OptionSettings {
   helperText?: string;
 }
 
-class Option<Value = unknown> {
-  run: Run;
+class Option<Value = unknown, Owner = unknown> {
+  run: Owner;
   defaultValue: Value;
   title: string;
   description: string | undefined;
@@ -21,7 +20,7 @@ class Option<Value = unknown> {
 
   /** Reactive option with optional validation */
   constructor(
-    run: Run,
+    run: Owner,
     defaultValue: Value,
     title: string,
     description?: string,
