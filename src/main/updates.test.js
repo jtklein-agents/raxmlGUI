@@ -1,10 +1,8 @@
 // @ts-nocheck — Jest globals. checkJs has no test runner types.
 import fs from 'fs';
 import path from 'path';
-import { setImmediate } from 'timers';
 import { checkForUpdates, listenForUpdates } from './updates';
 
-global.setImmediate = setImmediate;
 
 function updater() {
   const listeners = Object.create( null );
