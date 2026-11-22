@@ -322,14 +322,13 @@ describe( 'Alignment constructor', () => {
     expect( typeof alignment.modeltestDisabled ).toBe( 'boolean' );
   } );
 
-  it( 'disables modeltest on Windows 7', () => {
+  it( 'disables modeltest on Windows 7', async () => {
     window.rendererBridge = { ...bridge, host: { ...bridge.host, windows: true, release: '6.1.7601' } };
-    jest.isolateModules( () => {
-      const IsolatedRun = require( './Run' ).default;
+    vi.resetModules();
+    const IsolatedRun = ( await import( './Run' ) ).default;
       const run = new IsolatedRun( {}, 1 );
       run.addAlignments( [{ path: '/a.fasta' }] );
       expect( run.alignments[0].modeltestDisabled ).toBe( true );
-    } );
   } );
 } );
 

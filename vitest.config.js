@@ -13,7 +13,7 @@ export default defineConfig( {
     environment: 'jsdom',
     globals: true,
     clearMocks: false,
-    include: [ 'src/**/*.test.js', 'e2e/helpers/**/*.test.js' ],
+    include: [ 'src/**/*.test.{js,jsx}', 'e2e/helpers/**/*.test.js' ],
     setupFiles: [ './spike/jestShim.js', './jest/setup.js', './jest/mobxActionWarning.js' ],
     alias: {
       electron: resolve( import.meta.dirname, 'jest/electron.js' ),
