@@ -13,8 +13,8 @@ export interface FastaAlignment {
 }
 
 export const isFasta = ( lines: string[] ): boolean => {
-  for ( let i = 0; i < lines.length; ++i ) {
-    const line = lines[0].trim();
+  for ( const raw of lines ) {
+    const line = raw.trim();
     if ( line.length === 0 || line[0] === '#' ) {
       continue;
     }
