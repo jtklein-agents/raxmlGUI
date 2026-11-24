@@ -2,7 +2,7 @@
 
 Ticket: #364. Question: can `scripts/download-binaries.js` drop `download` for Node 24 `fetch` plus `extract-zip`, keeping the RAxML binaries' file modes? And do `install-electron`, `electron-download`, `patch-package`, `postinstall-postinstall` still have a use?
 
-Checked on `origin/master` at 013b630, 2026-11-24.
+Checked on `origin/master` at acd4e44, 2026-11-24.
 
 ## Answer
 
@@ -75,7 +75,7 @@ No `.github/workflows/*.yaml` references any of the four directly. CI reaches `i
 
 ## Sources
 
-- `scripts/download-binaries.js`, `package.json` (`scripts`, `dependencies`, `devDependencies`, `build.*.extraResources`), `.github/workflows/{build,e2e,lint,docs-e2e}.yaml`, `sentry-symbols.js`, `README.md`, all at 013b630.
+- `scripts/download-binaries.js`, `package.json` (`scripts`, `dependencies`, `devDependencies`, `build.*.extraResources`), `.github/workflows/{build,e2e,lint,docs-e2e}.yaml`, `sentry-symbols.js`, `README.md`, all at acd4e44.
 - `zipinfo` of `https://github.com/AntonelliLab/raxmlGUI-binaries/releases/download/v24.09.28/{Mac,Linux,Windows}.zip`.
 - `npm pack extract-zip@2.0.1`: `index.js`, `readme.md`. `npm view extract-zip` reports 2.0.1 as the latest version, last modified 2023-03-04.
 - `node_modules/decompress/index.js`, `node_modules/decompress-unzip/index.js`, `node_modules/electron/{package.json,install.js}`, `node_modules/@electron-internal/extract-zip/{package.json,index.d.ts}`, `node_modules/postinstall-postinstall/run.js`.
