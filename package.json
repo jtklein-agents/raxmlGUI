@@ -138,7 +138,8 @@
       "!static{,/**/*}",
       "!scripts{,/**/*}",
       "!test-results{,/**/*}",
-      "!playwright-report{,/**/*}"
+      "!playwright-report{,/**/*}",
+      "!node_modules/@oxc-parser{,/**/*}"
     ],
     "extraResources": [
       "assets/"
