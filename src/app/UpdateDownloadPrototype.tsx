@@ -88,8 +88,15 @@ function VariantA( { p }: { p: Progress } ): React.JSX.Element {
 
 function VariantB( { p }: { p: Progress } ): React.JSX.Element {
   return (
-    <Backdrop open sx={{ zIndex: 1300, color: '#fff', flexDirection: 'column', gap: 3 }}>
+    <Backdrop open sx={{ zIndex: 1300, color: '#fff', bgcolor: 'rgba(0,0,0,0.8)', flexDirection: 'column', gap: 3 }}>
       <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+        <CircularProgress
+          variant="determinate"
+          value={100}
+          size={140}
+          thickness={3}
+          sx={{ position: 'absolute', color: 'rgba(255,255,255,0.2)' }}
+        />
         <CircularProgress
           color="inherit"
           size={140}
