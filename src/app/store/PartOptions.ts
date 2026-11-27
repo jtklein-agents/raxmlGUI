@@ -16,7 +16,7 @@ interface Choice {
 
 interface AlignmentLike {
   run: unknown;
-  dataType: string;
+  dataType: string | undefined;
   partitionType: string;
   length: number;
   partition: { partToAdd: { type: { value: string } } };
@@ -85,6 +85,9 @@ class PartType extends PartBase<string> {
   }
   get options(): Choice[] {
     const { dataType } = this.alignment;
+    if ( dataType === undefined ) {
+      return [];
+    }
     let opts = [dataType];
     if ( dataType === '' || dataType === 'mixed' ) {
       opts = ['DNA', 'BIN', 'MULTI', 'protein'];
@@ -156,7 +159,7 @@ class PartEnd extends PartBase<number> {
           name: 'part-end',
           message: () => `Must be in interval [${this.min}, ${this.max}]`,
           test: ( value ) => {
-            return value >= this.min && value <= this.max;
+            return value !== undefined && value >= this.min && value <= this.max;
           },
         } ),
         allowOnlyValidChange: false,

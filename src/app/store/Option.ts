@@ -13,8 +13,8 @@ class Option<Value = unknown, Owner = unknown> {
   run: Owner;
   defaultValue: Value;
   title: string;
-  description: string;
-  hoverInfo: string;
+  description: string | undefined;
+  hoverInfo: string | undefined;
   schema: Schema;
   allowOnlyValidChange: boolean;
   helperText: string;
